@@ -10,8 +10,8 @@ import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 export function Navbar() {
   const [location] = useLocation();
   const sessionId = getSessionId();
-  const { data: cartItems } = useGetCart({ query: { enabled: true } });
-  const { data: wishlistItems } = useGetWishlist({ query: { enabled: true } });
+  const { data: cartItems } = useGetCart();
+  const { data: wishlistItems } = useGetWishlist();
 
   const cartCount = cartItems?.reduce((acc, item) => acc + item.quantity, 0) || 0;
   const wishlistCount = wishlistItems?.length || 0;

@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { Product } from "@workspace/api-client-react/src/generated/api.schemas";
+import { Product } from "@workspace/api-client-react";
 import { AiScoreBadge } from "./ai-score-badge";
 import { PriceDisplay } from "./price-display";
 import { PlaceholderImage } from "./placeholder-image";

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { useAiRecommend } from "@workspace/api-client-react";
-import { ProductRecommendation } from "@workspace/api-client-react/src/generated/api.schemas";
+import { ProductRecommendation } from "@workspace/api-client-react";
 import { ProductCard } from "@/components/product-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
