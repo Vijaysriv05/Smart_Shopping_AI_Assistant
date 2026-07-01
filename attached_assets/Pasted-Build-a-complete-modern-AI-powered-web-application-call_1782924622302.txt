@@ -1,0 +1,527 @@
+Build a complete, modern, AI-powered web application called "Smart Autonomous Shopping AI Agent".
+
+This should NOT be a normal shopping website and NOT be a simple chatbot.
+
+The core idea is that the AI Agent performs all decision making automatically with minimal user effort.
+
+The application should look like a premium AI product with a modern responsive UI.
+
+======================================================
+PROJECT GOAL
+======================================================
+
+Create an autonomous AI Shopping Assistant that behaves like a personal shopping expert.
+
+Instead of simply searching products, the AI should:
+
+• Understand user intent.
+• Analyze user preferences.
+• Compare products.
+• Rank products.
+• Explain recommendations.
+• Predict user needs.
+• Suggest alternatives.
+• Learn from conversation context.
+• Automate shopping decisions.
+
+The AI should perform reasoning before responding.
+
+Every recommendation should include an explanation.
+
+======================================================
+TECH STACK
+======================================================
+
+Frontend:
+React
+Tailwind CSS
+Modern animations
+Dark/Light Mode
+
+Backend:
+Node.js
+Express
+
+Database:
+SQLite (or PostgreSQL if available)
+
+AI:
+OpenAI API (or Gemini API if API key is available)
+
+======================================================
+HOME PAGE
+======================================================
+
+Create an attractive landing page with:
+
+AI animated hero section
+
+Search bar
+
+Featured AI recommendations
+
+Trending products
+
+Categories
+
+Modern cards
+
+AI Shopping Dashboard
+
+Professional navbar
+
+Responsive design
+
+Beautiful icons
+
+Glassmorphism effects
+
+======================================================
+LOGIN
+======================================================
+
+Simple login
+
+Register
+
+Guest mode
+
+======================================================
+MAIN FEATURE
+======================================================
+
+The AI Shopping Agent should understand natural language.
+
+Example:
+
+"I need a laptop under ₹70000 for Java programming and AI development."
+
+The AI should automatically:
+
+Extract budget
+
+Extract category
+
+Understand purpose
+
+Identify user preferences
+
+Filter products
+
+Compare all matching products
+
+Rank them
+
+Recommend the best one
+
+Explain WHY it selected them.
+
+======================================================
+ADVANCED AI FEATURES
+======================================================
+
+1. Personalized Recommendation Engine
+
+AI remembers:
+
+budget
+
+favorite brands
+
+preferred categories
+
+shopping history
+
+preferred price range
+
+favorite colors
+
+favorite specifications
+
+Future recommendations should improve automatically.
+
+------------------------------------------------------
+
+2. AI Product Comparison
+
+User selects products.
+
+AI compares:
+
+Price
+
+Performance
+
+Battery
+
+Camera
+
+Display
+
+Processor
+
+RAM
+
+Storage
+
+Warranty
+
+Value for Money
+
+Then chooses the winner.
+
+------------------------------------------------------
+
+3. AI Recommendation Score
+
+Every product receives:
+
+AI Score /100
+
+Performance Score
+
+Price Score
+
+Reliability Score
+
+Battery Score
+
+Popularity Score
+
+Future Proof Score
+
+Overall Recommendation
+
+------------------------------------------------------
+
+4. Explainable AI
+
+Never recommend without explanation.
+
+Every recommendation should include:
+
+Why this product?
+
+Advantages
+
+Disadvantages
+
+Best for
+
+Not suitable for
+
+Better alternatives
+
+------------------------------------------------------
+
+5. Budget Optimization
+
+If user budget is too low:
+
+AI suggests increasing budget slightly.
+
+Example:
+
+"You can spend ₹3000 more and receive much better performance."
+
+------------------------------------------------------
+
+6. Smart Cart AI
+
+When products are added:
+
+AI automatically recommends accessories.
+
+Laptop →
+
+Cooling Pad
+
+Mouse
+
+USB Hub
+
+Bag
+
+Monitor
+
+Phone →
+
+Case
+
+Tempered Glass
+
+Charger
+
+Power Bank
+
+------------------------------------------------------
+
+7. Review Intelligence
+
+Instead of showing thousands of reviews,
+
+AI summarizes:
+
+Positive points
+
+Negative points
+
+Overall sentiment
+
+Most common complaints
+
+Most loved features
+
+------------------------------------------------------
+
+8. Price Prediction
+
+AI predicts:
+
+Whether price may increase
+
+Whether price may decrease
+
+Best time to buy
+
+Buying confidence score
+
+------------------------------------------------------
+
+9. Alternative Recommendation
+
+If product unavailable,
+
+AI finds better alternatives.
+
+------------------------------------------------------
+
+10. Conversation Memory
+
+The AI remembers previous conversations.
+
+Example:
+
+User:
+
+"I am a Computer Science student."
+
+Later:
+
+Recommend laptop.
+
+AI automatically prefers:
+
+Programming
+
+Battery
+
+Performance
+
+Portability
+
+======================================================
+AUTONOMOUS AI MODE
+======================================================
+
+This is the most important feature.
+
+The AI Agent should perform automatic reasoning.
+
+Workflow:
+
+Understand request
+
+↓
+
+Analyze user profile
+
+↓
+
+Analyze budget
+
+↓
+
+Analyze purpose
+
+↓
+
+Compare products
+
+↓
+
+Predict best option
+
+↓
+
+Recommend
+
+↓
+
+Explain
+
+↓
+
+Suggest accessories
+
+↓
+
+Suggest warranty
+
+↓
+
+Suggest future upgrades
+
+Everything should happen automatically.
+
+======================================================
+AI DASHBOARD
+======================================================
+
+Create dashboard showing:
+
+Shopping Insights
+
+Saved Budget
+
+Favorite Categories
+
+AI Recommendation History
+
+Top AI Picks
+
+Recent Searches
+
+Shopping Analytics
+
+Price Drop Alerts
+
+Trending Categories
+
+======================================================
+EXTRA FEATURES
+======================================================
+
+Voice search
+
+Image search
+
+Dark mode
+
+Wishlist
+
+Favorite products
+
+Search history
+
+Recently viewed
+
+Notifications
+
+AI shopping assistant floating button
+
+Typing animation
+
+Loading animation
+
+Skeleton loading
+
+Responsive mobile UI
+
+======================================================
+ADMIN PANEL
+======================================================
+
+Dashboard
+
+Manage products
+
+Manage categories
+
+View analytics
+
+View AI recommendations
+
+Monitor user searches
+
+Manage inventory
+
+======================================================
+DATABASE
+======================================================
+
+Create database tables for:
+
+Users
+
+Products
+
+Categories
+
+Reviews
+
+Wishlist
+
+Cart
+
+Recommendation History
+
+AI Memory
+
+Price History
+
+Notifications
+
+======================================================
+DESIGN
+======================================================
+
+Use premium UI.
+
+Rounded cards
+
+Gradient buttons
+
+Smooth animations
+
+Professional dashboard
+
+Beautiful charts
+
+Modern typography
+
+Elegant color palette
+
+Responsive layout
+
+======================================================
+PROJECT QUALITY
+======================================================
+
+The project should feel like a real AI product.
+
+Avoid basic CRUD appearance.
+
+The AI should appear intelligent.
+
+The recommendation process must be transparent.
+
+Code should be modular.
+
+Well documented.
+
+Production-ready structure.
+
+Professional folder organization.
+
+Clean code.
+
+Responsive.
+
+Error handling.
+
+Loading states.
+
+Reusable components.
+
+The final result should be impressive enough to demonstrate AI Agent capabilities in an academic project.
