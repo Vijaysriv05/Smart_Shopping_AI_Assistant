@@ -15,6 +15,7 @@ import Compare from "@/pages/compare";
 import Dashboard from "@/pages/dashboard";
 import Cart from "@/pages/cart";
 import Wishlist from "@/pages/wishlist";
+import Profile from "@/pages/profile";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient({
@@ -38,6 +39,7 @@ function Router() {
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/cart" component={Cart} />
         <Route path="/wishlist" component={Wishlist} />
+        <Route path="/profile" component={Profile} />
         <Route component={NotFound} />
       </Switch>
     </Layout>

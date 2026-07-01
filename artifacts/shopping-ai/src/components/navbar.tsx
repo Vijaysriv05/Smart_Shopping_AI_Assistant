@@ -1,7 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { ThemeToggle } from "./theme-toggle";
 import { Button } from "./ui/button";
-import { Bot, ShoppingCart, Heart, Search, LayoutDashboard, Menu, X } from "lucide-react";
+import { Bot, ShoppingCart, Heart, Search, LayoutDashboard, Menu, X, UserCircle2 } from "lucide-react";
 import { useGetCart, useGetWishlist } from "@workspace/api-client-react";
 import { getSessionId } from "@/lib/session";
 import { useState } from "react";
@@ -70,6 +70,12 @@ export function Navbar() {
 
           <ThemeToggle />
 
+          <Link href="/profile">
+            <Button variant="ghost" size="icon" className={`hidden sm:flex ${location === "/profile" ? "text-primary" : ""}`}>
+              <UserCircle2 className="w-5 h-5" />
+            </Button>
+          </Link>
+
           <Link href="/wishlist">
             <Button variant="ghost" size="icon" className="relative hidden sm:flex">
               <Heart className="w-5 h-5" />
@@ -124,6 +130,9 @@ export function Navbar() {
                   <Link href="/wishlist" onClick={() => setIsOpen(false)} className="text-lg font-medium text-muted-foreground hover:text-primary flex items-center justify-between">
                     Wishlist
                     {wishlistCount > 0 && <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">{wishlistCount}</span>}
+                  </Link>
+                  <Link href="/profile" onClick={() => setIsOpen(false)} className="text-lg font-medium text-muted-foreground hover:text-primary">
+                    My Profile
                   </Link>
                 </nav>
               </div>
