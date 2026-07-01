@@ -1,22 +1,34 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Smart Autonomous Shopping AI Agent API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: products
+    description: Product operations
+  - name: categories
+    description: Category operations
+  - name: ai
+    description: AI agent operations
+  - name: cart
+    description: Cart operations
+  - name: wishlist
+    description: Wishlist operations
+  - name: recommendations
+    description: Recommendation history
+  - name: dashboard
+    description: Dashboard analytics
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,13 +36,630 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /products:
+    get:
+      operationId: listProducts
+      tags: [products]
+      summary: List products with optional filters
+      parameters:
+        - name: category
+          in: query
+          schema: { type: string }
+        - name: search
+          in: query
+          schema: { type: string }
+        - name: minPrice
+          in: query
+          schema: { type: number }
+        - name: maxPrice
+          in: query
+          schema: { type: number }
+        - name: brand
+          in: query
+          schema: { type: string }
+        - name: limit
+          in: query
+          schema: { type: integer }
+        - name: offset
+          in: query
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Product list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+    post:
+      operationId: createProduct
+      tags: [products]
+      summary: Create a product (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+
+  /products/featured:
+    get:
+      operationId: getFeaturedProducts
+      tags: [products]
+      summary: Get featured/trending products
+      responses:
+        "200":
+          description: Featured products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+
+  /products/{id}:
+    get:
+      operationId: getProduct
+      tags: [products]
+      summary: Get a single product
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Product
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "404":
+          description: Not found
+
+  /categories:
+    get:
+      operationId: listCategories
+      tags: [categories]
+      summary: List all categories
+      responses:
+        "200":
+          description: Categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+
+  /ai/recommend:
+    post:
+      operationId: aiRecommend
+      tags: [ai]
+      summary: Get AI-powered product recommendations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecommendRequest"
+      responses:
+        "200":
+          description: AI recommendations with explanations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecommendResponse"
+
+  /ai/compare:
+    post:
+      operationId: aiCompare
+      tags: [ai]
+      summary: Compare products using AI
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompareRequest"
+      responses:
+        "200":
+          description: AI comparison result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompareResponse"
+
+  /ai/score/{productId}:
+    get:
+      operationId: getAiScore
+      tags: [ai]
+      summary: Get AI score breakdown for a product
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: AI score
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiScore"
+
+  /ai/memory:
+    get:
+      operationId: getAiMemory
+      tags: [ai]
+      summary: Get user's AI memory/preferences
+      responses:
+        "200":
+          description: AI memory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiMemory"
+    patch:
+      operationId: updateAiMemory
+      tags: [ai]
+      summary: Update user AI memory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AiMemoryUpdate"
+      responses:
+        "200":
+          description: Updated memory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiMemory"
+
+  /ai/price-prediction/{productId}:
+    get:
+      operationId: getPricePrediction
+      tags: [ai]
+      summary: Get AI price prediction for a product
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Price prediction
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricePrediction"
+
+  /cart:
+    get:
+      operationId: getCart
+      tags: [cart]
+      summary: Get user's cart
+      responses:
+        "200":
+          description: Cart items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CartItem"
+    post:
+      operationId: addToCart
+      tags: [cart]
+      summary: Add product to cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CartItemInput"
+      responses:
+        "201":
+          description: Added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartItem"
+
+  /cart/{id}:
+    delete:
+      operationId: removeFromCart
+      tags: [cart]
+      summary: Remove item from cart
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Removed
+
+  /wishlist:
+    get:
+      operationId: getWishlist
+      tags: [wishlist]
+      summary: Get user's wishlist
+      responses:
+        "200":
+          description: Wishlist items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WishlistItem"
+    post:
+      operationId: addToWishlist
+      tags: [wishlist]
+      summary: Add product to wishlist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WishlistItemInput"
+      responses:
+        "201":
+          description: Added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WishlistItem"
+
+  /wishlist/{id}:
+    delete:
+      operationId: removeFromWishlist
+      tags: [wishlist]
+      summary: Remove from wishlist
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Removed
+
+  /recommendations/history:
+    get:
+      operationId: getRecommendationHistory
+      tags: [recommendations]
+      summary: Get AI recommendation history
+      responses:
+        "200":
+          description: History
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RecommendationHistory"
+
+  /dashboard/stats:
+    get:
+      operationId: getDashboardStats
+      tags: [dashboard]
+      summary: Get dashboard overview stats
+      responses:
+        "200":
+          description: Dashboard stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+
+  /dashboard/trending:
+    get:
+      operationId: getTrendingCategories
+      tags: [dashboard]
+      summary: Get trending categories with counts
+      responses:
+        "200":
+          description: Trending data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TrendingCategory"
+
+  /dashboard/price-alerts:
+    get:
+      operationId: getPriceAlerts
+      tags: [dashboard]
+      summary: Get price drop alerts for wishlist items
+      responses:
+        "200":
+          description: Price alerts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PriceAlert"
+
 components:
   schemas:
     HealthStatus:
       type: object
       properties:
-        status:
-          type: string
-      required:
-        - status
+        status: { type: string }
+      required: [status]
 
+    Product:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        brand: { type: string }
+        category: { type: string }
+        price: { type: number }
+        originalPrice: { type: ["number", "null"] }
+        imageUrl: { type: ["string", "null"] }
+        description: { type: string }
+        specs: { type: object, additionalProperties: true }
+        rating: { type: number }
+        reviewCount: { type: integer }
+        inStock: { type: boolean }
+        isFeatured: { type: boolean }
+        tags: { type: array, items: { type: string } }
+        aiScore: { type: ["number", "null"] }
+        createdAt: { type: string }
+      required: [id, name, brand, category, price, description, rating, reviewCount, inStock, isFeatured, tags]
+
+    ProductInput:
+      type: object
+      properties:
+        name: { type: string }
+        brand: { type: string }
+        category: { type: string }
+        price: { type: number }
+        originalPrice: { type: ["number", "null"] }
+        imageUrl: { type: ["string", "null"] }
+        description: { type: string }
+        specs: { type: object, additionalProperties: true }
+        rating: { type: number }
+        reviewCount: { type: integer }
+        inStock: { type: boolean }
+        isFeatured: { type: boolean }
+        tags: { type: array, items: { type: string } }
+      required: [name, brand, category, price, description, rating, reviewCount, inStock, isFeatured, tags]
+
+    Category:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        slug: { type: string }
+        icon: { type: string }
+        productCount: { type: integer }
+      required: [id, name, slug, icon, productCount]
+
+    RecommendRequest:
+      type: object
+      properties:
+        query: { type: string }
+        budget: { type: ["number", "null"] }
+        category: { type: ["string", "null"] }
+        preferences: { type: object, additionalProperties: true }
+        conversationHistory:
+          type: array
+          items:
+            type: object
+            properties:
+              role: { type: string }
+              content: { type: string }
+            required: [role, content]
+      required: [query]
+
+    RecommendResponse:
+      type: object
+      properties:
+        reasoning: { type: string }
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductRecommendation"
+        budgetAdvice: { type: ["string", "null"] }
+        accessories:
+          type: array
+          items: { type: string }
+        followUpQuestions:
+          type: array
+          items: { type: string }
+      required: [reasoning, products, accessories, followUpQuestions]
+
+    ProductRecommendation:
+      type: object
+      properties:
+        product:
+          $ref: "#/components/schemas/Product"
+        score: { type: number }
+        rank: { type: integer }
+        why: { type: string }
+        pros: { type: array, items: { type: string } }
+        cons: { type: array, items: { type: string } }
+        bestFor: { type: string }
+        notSuitableFor: { type: string }
+        reviewSummary: { type: string }
+      required: [product, score, rank, why, pros, cons, bestFor, notSuitableFor, reviewSummary]
+
+    CompareRequest:
+      type: object
+      properties:
+        productIds: { type: array, items: { type: integer } }
+        userNeeds: { type: ["string", "null"] }
+      required: [productIds]
+
+    CompareResponse:
+      type: object
+      properties:
+        winner:
+          $ref: "#/components/schemas/Product"
+        analysis: { type: string }
+        comparisonTable:
+          type: array
+          items:
+            type: object
+            properties:
+              aspect: { type: string }
+              scores: { type: object, additionalProperties: true }
+            required: [aspect, scores]
+        recommendation: { type: string }
+      required: [winner, analysis, comparisonTable, recommendation]
+
+    AiScore:
+      type: object
+      properties:
+        productId: { type: integer }
+        overall: { type: number }
+        performance: { type: number }
+        price: { type: number }
+        reliability: { type: number }
+        battery: { type: number }
+        popularity: { type: number }
+        futureProof: { type: number }
+        summary: { type: string }
+      required: [productId, overall, performance, price, reliability, battery, popularity, futureProof, summary]
+
+    AiMemory:
+      type: object
+      properties:
+        id: { type: integer }
+        sessionId: { type: string }
+        budget: { type: ["number", "null"] }
+        favoriteCategories: { type: array, items: { type: string } }
+        favoriteBrands: { type: array, items: { type: string } }
+        preferredPriceRange: { type: ["string", "null"] }
+        userProfile: { type: ["string", "null"] }
+        shoppingGoals: { type: array, items: { type: string } }
+        updatedAt: { type: string }
+      required: [id, sessionId, favoriteCategories, favoriteBrands, shoppingGoals]
+
+    AiMemoryUpdate:
+      type: object
+      properties:
+        budget: { type: ["number", "null"] }
+        favoriteCategories: { type: array, items: { type: string } }
+        favoriteBrands: { type: array, items: { type: string } }
+        preferredPriceRange: { type: ["string", "null"] }
+        userProfile: { type: ["string", "null"] }
+        shoppingGoals: { type: array, items: { type: string } }
+
+    PricePrediction:
+      type: object
+      properties:
+        productId: { type: integer }
+        currentPrice: { type: number }
+        predictedTrend: { type: string }
+        confidence: { type: number }
+        bestTimeToBuy: { type: string }
+        analysis: { type: string }
+        priceHistory:
+          type: array
+          items:
+            type: object
+            properties:
+              date: { type: string }
+              price: { type: number }
+            required: [date, price]
+      required: [productId, currentPrice, predictedTrend, confidence, bestTimeToBuy, analysis, priceHistory]
+
+    CartItem:
+      type: object
+      properties:
+        id: { type: integer }
+        sessionId: { type: string }
+        productId: { type: integer }
+        quantity: { type: integer }
+        product:
+          $ref: "#/components/schemas/Product"
+        addedAt: { type: string }
+      required: [id, sessionId, productId, quantity, product]
+
+    CartItemInput:
+      type: object
+      properties:
+        productId: { type: integer }
+        quantity: { type: integer }
+        sessionId: { type: string }
+      required: [productId, quantity, sessionId]
+
+    WishlistItem:
+      type: object
+      properties:
+        id: { type: integer }
+        sessionId: { type: string }
+        productId: { type: integer }
+        product:
+          $ref: "#/components/schemas/Product"
+        addedAt: { type: string }
+      required: [id, sessionId, productId, product]
+
+    WishlistItemInput:
+      type: object
+      properties:
+        productId: { type: integer }
+        sessionId: { type: string }
+      required: [productId, sessionId]
+
+    RecommendationHistory:
+      type: object
+      properties:
+        id: { type: integer }
+        sessionId: { type: string }
+        query: { type: string }
+        reasoning: { type: string }
+        productIds: { type: array, items: { type: integer } }
+        createdAt: { type: string }
+      required: [id, sessionId, query, reasoning, productIds, createdAt]
+
+    DashboardStats:
+      type: object
+      properties:
+        totalProducts: { type: integer }
+        totalCategories: { type: integer }
+        avgAiScore: { type: number }
+        recommendationsToday: { type: integer }
+        cartItems: { type: integer }
+        wishlistItems: { type: integer }
+        savedBudget: { type: number }
+        topCategory: { type: string }
+      required: [totalProducts, totalCategories, avgAiScore, recommendationsToday, cartItems, wishlistItems, savedBudget, topCategory]
+
+    TrendingCategory:
+      type: object
+      properties:
+        category: { type: string }
+        count: { type: integer }
+        avgPrice: { type: number }
+        avgScore: { type: number }
+      required: [category, count, avgPrice, avgScore]
+
+    PriceAlert:
+      type: object
+      properties:
+        productId: { type: integer }
+        productName: { type: string }
+        originalPrice: { type: number }
+        currentPrice: { type: number }
+        discount: { type: number }
+        imageUrl: { type: ["string", "null"] }
+      required: [productId, productName, originalPrice, currentPrice, discount]

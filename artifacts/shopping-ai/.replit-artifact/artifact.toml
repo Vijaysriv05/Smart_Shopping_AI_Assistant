@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Smart Autonomous Shopping AI Agent"
+version = "1.0.0"
+id = "artifacts/shopping-ai"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 20591
+
+[services.development]
+run = "pnpm --filter @workspace/shopping-ai run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/shopping-ai", "run", "build" ]
+publicDir = "artifacts/shopping-ai/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20591"
+BASE_PATH = "/"
