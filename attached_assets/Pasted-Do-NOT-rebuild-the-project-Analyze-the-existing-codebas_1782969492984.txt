@@ -1,0 +1,106 @@
+Do NOT rebuild the project. Analyze the existing codebase first and preserve all completed features, UI, database, and architecture.
+
+Continue improving the current project into a production-ready Smart Autonomous Shopping AI Agent.
+
+The application must support ALL shopping categories, not only laptops and mobile phones.
+
+Expand the product catalog to include:
+
+- Electronics
+- Fashion (Men, Women, Kids)
+- Footwear
+- Watches
+- Beauty & Personal Care
+- Grocery
+- Home & Kitchen
+- Furniture
+- Books
+- Sports & Fitness
+- Toys
+- Baby Products
+- Pet Supplies
+- Office Supplies
+- Automotive Accessories
+- Health Products
+- Jewelry
+- Bags & Luggage
+- Appliances
+- Gaming
+- Stationery
+- Gift Items
+
+The AI Agent should work intelligently for every category.
+
+For every shopping request, the AI must:
+
+- Understand natural language.
+- Identify category automatically.
+- Extract budget.
+- Identify user intent.
+- Compare products.
+- Rank products using AI scores.
+- Explain every recommendation.
+- Suggest better alternatives.
+- Recommend accessories automatically.
+- Summarize customer reviews.
+- Detect overpriced products.
+- Predict price trends.
+- Remember user preferences.
+- Personalize future recommendations.
+- Show pros and cons for every recommendation.
+
+Do NOT make this a chatbot only.
+
+The AI Agent should proactively assist users.
+
+When users browse products, the AI should automatically:
+
+- Suggest similar products.
+- Recommend bundle offers.
+- Recommend accessories.
+- Warn about poor-rated products.
+- Highlight best value products.
+- Suggest products based on browsing history.
+- Predict what the user may need next.
+
+Improve the AI Dashboard by adding:
+
+- AI Recommendation History
+- Shopping Analytics
+- Category Trends
+- Price Trend Analysis
+- User Preference Analysis
+- AI Decision Logs
+- Personalized Insights
+- Saved Budget Analytics
+- Product Popularity
+- Review Sentiment Analysis
+
+Replace all hardcoded laptop/mobile data with a reusable product database that supports unlimited product categories.
+
+Create reusable product components so every category works automatically without writing separate code.
+
+The application must include:
+
+- Advanced Search
+- Smart Filters
+- Category Navigation
+- Wishlist
+- Shopping Cart
+- Order Summary
+- AI Product Comparison
+- AI Shopping Score
+- AI Review Summary
+- AI Memory
+- Dark Mode
+- Responsive Design
+- Loading Animations
+- Professional UI
+
+The floating AI assistant should appear on every page.
+
+It should automatically understand which page the user is viewing and provide contextual shopping suggestions instead of generic responses.
+
+Optimize all pages, fix incomplete functionality, eliminate bugs, improve responsiveness, and ensure the entire application works smoothly without breaking existing features.
+
+Only add missing features and improve the current project. Do not regenerate completed code.
