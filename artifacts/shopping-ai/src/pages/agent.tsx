@@ -96,10 +96,10 @@ export default function Agent() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full max-w-2xl mt-8">
                 {[
-                  "Best noise cancelling headphones under $300",
-                  "I need a laptop for programming, battery life is crucial",
-                  "What's the best espresso machine for beginners?",
-                  "Compare high-end running shoes"
+                  "Best laptop for programming under $1500",
+                  "I need noise cancelling headphones for travel",
+                  "Best smartphone camera under $1000",
+                  "Which smartwatch is best for fitness tracking?"
                 ].map((q) => (
                   <button
                     key={q}

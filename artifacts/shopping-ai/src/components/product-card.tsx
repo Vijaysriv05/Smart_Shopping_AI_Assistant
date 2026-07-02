@@ -70,22 +70,22 @@ export function ProductCard({ product, onCompareSelect, isSelectedForCompare = f
       transition={{ duration: 0.4, delay: index * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }}
       className="group relative flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-card transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1.5 hover:border-primary/40"
     >
-      {showCompareToggle && onCompareSelect && (
+      {hasDiscount && (
         <div className="absolute top-3 left-3 z-10">
+          <span className="bg-green-500 text-white text-[11px] font-bold px-2 py-0.5 rounded-full shadow">
+            -{discountPct}%
+          </span>
+        </div>
+      )}
+
+      {showCompareToggle && onCompareSelect && (
+        <div className={`absolute z-10 ${hasDiscount ? "top-3 left-16" : "top-3 left-3"}`}>
           <div className="bg-background/90 backdrop-blur-sm rounded-lg p-1.5 shadow-sm">
             <Checkbox
               checked={isSelectedForCompare}
               onCheckedChange={(checked) => onCompareSelect(product, checked as boolean)}
             />
           </div>
-        </div>
-      )}
-
-      {hasDiscount && (
-        <div className="absolute top-3 left-3 z-10">
-          <span className="bg-green-500 text-white text-[11px] font-bold px-2 py-0.5 rounded-full shadow">
-            -{discountPct}%
-          </span>
         </div>
       )}
 

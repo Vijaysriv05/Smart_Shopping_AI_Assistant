@@ -14,7 +14,9 @@ router.get("/products", async (req, res) => {
     const conditions = [];
     if (params.category) conditions.push(eq(productsTable.category, params.category));
     if (params.brand) conditions.push(eq(productsTable.brand, params.brand));
-    if (params.search) conditions.push(ilike(productsTable.name, `%${params.search}%`));
+    if (params.search) conditions.push(
+      sql`(${productsTable.name} ILIKE ${'%' + params.search + '%'} OR ${productsTable.brand} ILIKE ${'%' + params.search + '%'} OR ${productsTable.category} ILIKE ${'%' + params.search + '%'} OR ${productsTable.description} ILIKE ${'%' + params.search + '%'})`
+    );
     if (params.minPrice !== undefined) conditions.push(gte(sql`${productsTable.price}::numeric`, params.minPrice));
     if (params.maxPrice !== undefined) conditions.push(lte(sql`${productsTable.price}::numeric`, params.maxPrice));
 
