@@ -7,6 +7,7 @@ import wishlistRouter from "./wishlist";
 import recommendationsRouter from "./recommendations";
 import dashboardRouter from "./dashboard";
 import aiRouter from "./ai";
+import autonomousRouter from "./autonomous";
 
 const router: IRouter = Router();
 
@@ -18,5 +19,6 @@ router.use(wishlistRouter);
 router.use(recommendationsRouter);
 router.use(dashboardRouter);
 router.use(aiRouter);
+router.use(autonomousRouter);
 
 export default router;

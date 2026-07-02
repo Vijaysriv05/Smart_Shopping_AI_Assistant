@@ -1,7 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { ThemeToggle } from "./theme-toggle";
 import { Button } from "./ui/button";
-import { Bot, ShoppingCart, Heart, Search, LayoutDashboard, Menu, X, UserCircle2 } from "lucide-react";
+import { Bot, ShoppingCart, Heart, Search, Brain, Menu, X, UserCircle2 } from "lucide-react";
 import { useGetCart, useGetWishlist } from "@workspace/api-client-react";
 import { getSessionId } from "@/lib/session";
 import { useState } from "react";
@@ -23,6 +23,7 @@ export function Navbar() {
     { href: "/agent", label: "AI Agent", isAi: true },
     { href: "/compare", label: "Compare" },
     { href: "/dashboard", label: "Dashboard" },
+    { href: "/autonomous", label: "AI Command", isCommand: true },
   ];
 
   return (
@@ -45,7 +46,7 @@ export function Navbar() {
                 href={link.href}
                 className={`text-sm font-medium transition-colors hover:text-primary ${
                   location === link.href ? "text-foreground" : "text-muted-foreground"
-                } ${link.isAi ? "text-ai-gradient ai-glow-text font-bold" : ""}`}
+                } ${link.isAi ? "text-ai-gradient ai-glow-text font-bold" : ""} ${(link as any).isCommand ? "flex items-center gap-1 text-violet-400 hover:text-violet-300 font-bold" : ""}`}
               >
                 {link.label}
               </Link>
