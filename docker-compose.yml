@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  # MySQL database container
+  db:
+    image: mysql:8.0
+    container_name: shopping_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: VaSo@497$
+      MYSQL_DATABASE: ai_shopping_assistant
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pVaSo@497$"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Spring Boot backend and React frontend container
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: shopping_app
+    restart: always
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/ai_shopping_assistant?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=VaSo@497$
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-AQ.Ab8RN6IBmmu7XDm2NfKnBB-0vkIqyfJvTE1VtnI4uP_mziEVSw}
+      - SERVER_PORT=5000
+
+volumes:
+  mysql_data:

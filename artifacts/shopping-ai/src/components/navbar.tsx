@@ -1,15 +1,94 @@
 import { Link, useLocation } from "wouter";
 import { ThemeToggle } from "./theme-toggle";
 import { Button } from "./ui/button";
-import { Bot, ShoppingCart, Heart, Search, Brain, Menu, X, UserCircle2 } from "lucide-react";
+import { Bot, ShoppingCart, Heart, Search, Menu, UserCircle2, LogIn, LogOut, Bell } from "lucide-react";
 import { useGetCart, useGetWishlist } from "@workspace/api-client-react";
-import { getSessionId } from "@/lib/session";
+import { getAuthUser, clearAuthSession, isAuthenticated } from "@/lib/session";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import { useEffect } from "react";
+
+function NotificationDropdown() {
+  const [alerts, setAlerts] = useState<any[]>([]);
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    loadAlerts();
+    const interval = setInterval(loadAlerts, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const loadAlerts = () => {
+    fetch("/api/ai/notifications")
+      .then(res => res.json())
+      .then(data => setAlerts(data))
+      .catch(err => console.error("Error fetching notifications:", err));
+  };
+
+  const handleReadAll = () => {
+    fetch("/api/ai/notifications/read-all", { method: "POST" })
+      .then(() => loadAlerts())
+      .catch(err => console.error(err));
+  };
+
+  const unreadCount = alerts.filter(a => !a.isRead).length;
+
+  return (
+    <div className="relative">
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => setShow(!show)}
+        className={`relative ${unreadCount > 0 ? "text-primary" : ""}`}
+      >
+        <Bell className="w-5 h-5" />
+        {unreadCount > 0 && (
+          <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white animate-pulse">
+            {unreadCount}
+          </span>
+        )}
+      </Button>
+
+      {show && (
+        <div className="absolute right-0 mt-2 w-80 bg-card border rounded-2xl p-4 shadow-xl z-50 text-xs space-y-3">
+          <div className="flex justify-between items-center border-b pb-2">
+            <span className="font-bold text-foreground">AI Price & Coupon Alerts</span>
+            {unreadCount > 0 && (
+              <button onClick={handleReadAll} className="text-primary hover:underline font-semibold">
+                Mark all read
+              </button>
+            )}
+          </div>
+          <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+            {alerts.length === 0 ? (
+              <div className="text-center py-4 text-muted-foreground">No alerts yet.</div>
+            ) : (
+              alerts.map(alert => (
+                <div
+                  key={alert.id}
+                  className={`p-2.5 rounded-xl border transition-colors ${
+                    alert.isRead ? "bg-muted/20 border-muted" : "bg-primary/5 border-primary/20"
+                  }`}
+                >
+                  <p className="text-foreground leading-normal">{alert.message}</p>
+                  <span className="text-[9px] text-muted-foreground mt-1 block">
+                    {new Date(alert.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 
 export function Navbar() {
   const [location] = useLocation();
-  const sessionId = getSessionId();
+  const user = getAuthUser();
+  const loggedIn = isAuthenticated();
   const { data: cartItems } = useGetCart();
   const { data: wishlistItems } = useGetWishlist();
 
@@ -70,6 +149,23 @@ export function Navbar() {
           </div>
 
           <ThemeToggle />
+
+          {loggedIn ? (
+            <>
+              <span className="hidden lg:inline text-xs text-muted-foreground">{user?.name}</span>
+              <Button variant="ghost" size="icon" className="hidden sm:flex" onClick={() => { clearAuthSession(); window.location.href = "/"; }} title="Sign out">
+                <LogOut className="w-5 h-5" />
+              </Button>
+            </>
+          ) : (
+            <Link href="/login">
+              <Button variant="ghost" size="icon" className="hidden sm:flex" title="Sign in">
+                <LogIn className="w-5 h-5" />
+              </Button>
+            </Link>
+          )}
+
+          <NotificationDropdown />
 
           <Link href="/profile">
             <Button variant="ghost" size="icon" className={`hidden sm:flex ${location === "/profile" ? "text-primary" : ""}`}>

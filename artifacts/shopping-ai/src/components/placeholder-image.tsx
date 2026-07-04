@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 interface PlaceholderImageProps {
   name: string;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 function getInitials(name: string) {
@@ -14,13 +15,14 @@ function getInitials(name: string) {
     .toUpperCase();
 }
 
-export function PlaceholderImage({ name, className }: PlaceholderImageProps) {
+export function PlaceholderImage({ name, className, style }: PlaceholderImageProps) {
   return (
     <div
       className={cn(
         "flex items-center justify-center w-full h-full bg-ai-gradient text-white select-none",
         className
       )}
+      style={style}
     >
       <span className="text-xl font-bold tracking-widest opacity-50">
         {getInitials(name)}

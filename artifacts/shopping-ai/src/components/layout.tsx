@@ -1,5 +1,5 @@
 import { Navbar } from "./navbar";
-import { FloatingAiButton } from "./floating-ai-button";
+import { FloatingAI } from "./floating-ai";
 import { usePriceAlerts } from "@/hooks/use-price-alerts";
 
 function PriceAlertWatcher() {
@@ -15,7 +15,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <main className="flex-1 flex flex-col relative z-10">
         {children}
       </main>
-      <FloatingAiButton />
+      <FloatingAI />
     </div>
   );
 }

@@ -27,9 +27,10 @@ function shouldShow(productId: number): boolean {
 }
 
 export function usePriceAlerts() {
-  const { data: alerts } = useGetPriceAlerts();
-  const fired = useRef(false);
+  const result = useGetPriceAlerts();
+  const alerts = result.data;
 
+  const fired = useRef(false);
   useEffect(() => {
     if (!alerts || alerts.length === 0 || fired.current) return;
     fired.current = true;

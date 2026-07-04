@@ -1,10 +1,13 @@
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { setSessionIdGetter, setAuthTokenGetter } from "@workspace/api-client-react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Layout } from "@/components/layout";
+import { getSessionId, getAuthToken } from "@/lib/session";
 
 // Pages
 import Home from "@/pages/home";
@@ -17,6 +20,8 @@ import Cart from "@/pages/cart";
 import Wishlist from "@/pages/wishlist";
 import Profile from "@/pages/profile";
 import Autonomous from "@/pages/autonomous";
+import Login from "@/pages/login";
+import Register from "@/pages/register";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient({
@@ -42,6 +47,8 @@ function Router() {
         <Route path="/wishlist" component={Wishlist} />
         <Route path="/profile" component={Profile} />
         <Route path="/autonomous" component={Autonomous} />
+        <Route path="/login" component={Login} />
+        <Route path="/register" component={Register} />
         <Route component={NotFound} />
       </Switch>
     </Layout>
@@ -49,6 +56,11 @@ function Router() {
 }
 
 function App() {
+  useEffect(() => {
+    setSessionIdGetter(() => getSessionId());
+    setAuthTokenGetter(() => getAuthToken());
+  }, []);
+
   return (
     <ThemeProvider defaultTheme="dark" storageKey="shopping-ai-theme">
       <QueryClientProvider client={queryClient}>

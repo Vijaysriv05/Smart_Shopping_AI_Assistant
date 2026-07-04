@@ -33,6 +33,29 @@ export default function Cart() {
     return acc;
   }, 0) || 0;
 
+  const formatCents = (cents: number) => `$${(cents / 100).toFixed(2)}`;
+
+  const handleCheckout = async () => {
+    try {
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Session-Id": localStorage.getItem("shopping-ai-session-id") || "",
+        },
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Checkout failed");
+      }
+      toast({ title: "Order placed!", description: "Your order has been confirmed." });
+      queryClient.invalidateQueries({ queryKey: getGetCartQueryKey() });
+      setLocation("/dashboard");
+    } catch (e: any) {
+      toast({ title: "Checkout failed", description: e.message, variant: "destructive" });
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-12 max-w-5xl">
@@ -114,12 +137,12 @@ export default function Cart() {
             <div className="space-y-3 mb-6 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>{formatCents(subtotal)}</span>
               </div>
               {savings > 0 && (
                 <div className="flex justify-between text-green-500">
                   <span>Savings</span>
-                  <span>-${savings.toFixed(2)}</span>
+                  <span>-{formatCents(savings)}</span>
                 </div>
               )}
               <div className="flex justify-between">
@@ -135,11 +158,11 @@ export default function Cart() {
             <div className="border-t pt-4 mb-6">
               <div className="flex justify-between items-end">
                 <span className="font-bold">Total</span>
-                <span className="text-2xl font-bold">${(subtotal).toFixed(2)}</span>
+                <span className="text-2xl font-bold">{formatCents(subtotal)}</span>
               </div>
             </div>
             
-            <Button size="lg" className="w-full mb-4">
+            <Button size="lg" className="w-full mb-4" onClick={handleCheckout}>
               Proceed to Checkout
             </Button>
             

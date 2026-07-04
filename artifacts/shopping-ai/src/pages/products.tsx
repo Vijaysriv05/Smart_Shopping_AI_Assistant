@@ -22,6 +22,14 @@ export default function Products() {
   const [compareItems, setCompareItems] = useState<number[]>([]);
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const cat = params.get("category");
+    const q = params.get("search") || params.get("q");
+    if (cat) setCategory(cat);
+    if (q) setSearch(q);
+  }, []);
+
+  useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(search), 400);
     return () => clearTimeout(timer);
   }, [search]);

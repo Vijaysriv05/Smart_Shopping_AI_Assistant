@@ -95,11 +95,28 @@ export function ProductCard({ product, onCompareSelect, isSelectedForCompare = f
             <img
               src={product.imageUrl}
               alt={product.name}
+              loading="lazy"
               className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
+              onError={(e) => {
+                const target = e.currentTarget;
+                // Step 1: Unsplash failed → try Picsum with product name seed (always works)
+                const picsumUrl = `https://picsum.photos/seed/${encodeURIComponent(product.category + product.id)}/600/400`;
+                if (!target.src.includes("picsum.photos")) {
+                  target.src = picsumUrl;
+                } else {
+                  // Step 2: Picsum also failed → show placeholder
+                  target.style.display = "none";
+                  const placeholder = target.nextElementSibling as HTMLElement;
+                  if (placeholder) placeholder.style.display = "flex";
+                }
+              }}
             />
-          ) : (
-            <PlaceholderImage name={product.name} className="transition-transform duration-700 group-hover:scale-105" />
-          )}
+          ) : null}
+          <PlaceholderImage
+            name={product.name}
+            className="transition-transform duration-700 group-hover:scale-105"
+            style={{ display: product.imageUrl ? "none" : "flex" } as React.CSSProperties}
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <div className="absolute top-3 right-3">
             <AiScoreBadge score={product.aiScore} />

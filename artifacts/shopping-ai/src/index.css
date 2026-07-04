@@ -184,3 +184,22 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  nav, footer, button, .no-print, header {
+    display: none !important;
+  }
+  #print-section {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 20px;
+  }
+}
+

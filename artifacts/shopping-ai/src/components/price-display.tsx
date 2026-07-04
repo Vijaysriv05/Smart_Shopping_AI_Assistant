@@ -8,9 +8,11 @@ interface PriceDisplayProps {
 }
 
 export function PriceDisplay({ price, originalPrice, className, size = "md" }: PriceDisplayProps) {
-  const hasDiscount = originalPrice != null && originalPrice > price;
+  const displayPrice = price / 100;
+  const displayOriginal = originalPrice != null ? originalPrice / 100 : null;
+  const hasDiscount = displayOriginal != null && displayOriginal > displayPrice;
   const discountPercent = hasDiscount
-    ? Math.round(((originalPrice - price) / originalPrice) * 100)
+    ? Math.round(((displayOriginal - displayPrice) / displayOriginal) * 100)
     : 0;
 
   const sizeClasses = {
@@ -28,12 +30,12 @@ export function PriceDisplay({ price, originalPrice, className, size = "md" }: P
   return (
     <div className={cn("flex items-end gap-2", className)}>
       <span className={cn("font-bold text-foreground", sizeClasses[size])}>
-        ${price.toFixed(2)}
+        ${displayPrice.toFixed(2)}
       </span>
       {hasDiscount && (
         <>
           <span className={cn("line-through text-muted-foreground", originalSizeClasses[size])}>
-            ${originalPrice.toFixed(2)}
+            ${displayOriginal!.toFixed(2)}
           </span>
           <span className="text-xs font-semibold text-green-500 bg-green-500/10 px-1.5 py-0.5 rounded">
             -{discountPercent}%
