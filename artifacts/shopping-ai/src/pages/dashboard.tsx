@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useGetDashboardStats, useGetRecommendationHistory, useGetTrendingCategories, useGetAiMemory, useGetCart } from "@workspace/api-client-react";
+import { getSessionId } from "@/lib/session";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Activity, ShoppingBag, Heart, DollarSign, Bot, ArrowRight, History, TrendingUp, Zap, Target, FileText, Download, TrendingDown, Percent, Award, UserCheck } from "lucide-react";
@@ -61,7 +62,11 @@ export default function Dashboard() {
   useEffect(() => {
     if (activeTab === "report") {
       setLoadingReport(true);
-      fetch("/api/ai/reports")
+      fetch("/api/ai/reports", {
+        headers: {
+          "x-session-id": getSessionId(),
+        }
+      })
         .then(res => res.json())
         .then(data => {
           setReport(data);

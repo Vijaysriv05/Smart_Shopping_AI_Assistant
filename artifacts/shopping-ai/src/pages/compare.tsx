@@ -92,14 +92,9 @@ export default function Compare() {
   }
 
   const winner = result.winner as Product;
-  const listProducts = productIds.map(id => {
-    if (id === winner.id) return winner;
-    // Find in fallback compare parameters or catalog
-    return result.winner.id !== id ? result.winner : result.winner; // fallback safe
-  });
-  
-  // Safe helper to get other product
-  const otherProduct = result.winner.id === productIds[0] ? result.winner : result.winner; 
+  const comparedProducts = (result.products || []) as Product[];
+  const productA = comparedProducts.find(p => Number(p.id) === Number(productIds[0])) || winner;
+  const productB = comparedProducts.find(p => Number(p.id) === Number(productIds[1])) || winner; 
   // Let's build explicit comparison table aspects
   const defaultSpecs = [
     { aspect: "Processor", val1: "Intel Core i7 / M3", val2: "AMD Ryzen 7 / M2" },
@@ -226,14 +221,14 @@ export default function Compare() {
                     <td className="px-6 py-4 font-medium text-foreground">Product Preview</td>
                     <td className="px-6 py-4 text-center">
                       <div className="flex flex-col items-center gap-2">
-                        <img src={winner.imageUrl} className="w-20 h-20 object-contain rounded-lg border bg-white p-1" />
-                        <span className="text-xs font-semibold text-primary truncate max-w-[180px]">{winner.name}</span>
+                        <img src={productA.imageUrl} className="w-20 h-20 object-contain rounded-lg border bg-white p-1" />
+                        <span className="text-xs font-semibold text-primary truncate max-w-[180px]">{productA.name}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-center">
                       <div className="flex flex-col items-center gap-2">
-                        <img src={winner.imageUrl} className="w-20 h-20 object-contain rounded-lg border bg-white p-1" />
-                        <span className="text-xs font-semibold text-primary truncate max-w-[180px]">{winner.name}</span>
+                        <img src={productB.imageUrl} className="w-20 h-20 object-contain rounded-lg border bg-white p-1" />
+                        <span className="text-xs font-semibold text-primary truncate max-w-[180px]">{productB.name}</span>
                       </div>
                     </td>
                   </tr>
@@ -241,48 +236,47 @@ export default function Compare() {
                   {/* Brand row */}
                   <tr>
                     <td className="px-6 py-4 font-medium text-foreground">Brand</td>
-                    <td className="px-6 py-4 text-center text-muted-foreground">{winner.brand}</td>
-                    <td className="px-6 py-4 text-center text-muted-foreground">{winner.brand}</td>
+                    <td className="px-6 py-4 text-center text-muted-foreground">{productA.brand}</td>
+                    <td className="px-6 py-4 text-center text-muted-foreground">{productB.brand}</td>
                   </tr>
 
                   {/* Price row */}
                   <tr className="bg-muted/10">
                     <td className="px-6 py-4 font-medium text-foreground">Price</td>
-                    <td className={getHighlightClass("Price", winner.price, winner.price, true)}>
-                      ${(winner.price / 100).toFixed(2)}
+                    <td className={getHighlightClass("Price", productA.price, productB.price, true)}>
+                      ${(productA.price / 100).toFixed(2)}
                     </td>
-                    <td className={getHighlightClass("Price", winner.price, winner.price, false)}>
-                      ${(winner.price / 100).toFixed(2)}
+                    <td className={getHighlightClass("Price", productA.price, productB.price, false)}>
+                      ${(productB.price / 100).toFixed(2)}
                     </td>
                   </tr>
 
                   {/* Rating row */}
                   <tr>
                     <td className="px-6 py-4 font-medium text-foreground">Rating</td>
-                    <td className={getHighlightClass("Rating", winner.rating, winner.rating, true)}>
-                      ⭐ {winner.rating} / 5
+                    <td className={getHighlightClass("Rating", productA.rating, productB.rating, true)}>
+                      ⭐ {productA.rating} / 5
                     </td>
-                    <td className={getHighlightClass("Rating", winner.rating, winner.rating, false)}>
-                      ⭐ {winner.rating} / 5
+                    <td className={getHighlightClass("Rating", productA.rating, productB.rating, false)}>
+                      ⭐ {productB.rating} / 5
                     </td>
                   </tr>
 
                   {/* Reviews Count */}
                   <tr>
                     <td className="px-6 py-4 font-medium text-foreground">Verified Reviews</td>
-                    <td className={getHighlightClass("Reviews", winner.reviewCount, winner.reviewCount, true)}>
-                      {winner.reviewCount.toLocaleString()} reviews
+                    <td className={getHighlightClass("Reviews", productA.reviewCount, productB.reviewCount, true)}>
+                      {productA.reviewCount.toLocaleString()} reviews
                     </td>
-                    <td className={getHighlightClass("Reviews", winner.reviewCount, winner.reviewCount, false)}>
-                      {winner.reviewCount.toLocaleString()} reviews
+                    <td className={getHighlightClass("Reviews", productA.reviewCount, productB.reviewCount, false)}>
+                      {productB.reviewCount.toLocaleString()} reviews
                     </td>
                   </tr>
 
                   {/* Dynamic specs mapped from Gemini response */}
                   {aspectRows.map((row: any, i: number) => {
-                    const keys = Object.keys(row.scores || {});
-                    const val1 = row.scores[keys[0]];
-                    const val2 = row.scores[keys[1] || keys[0]];
+                    const val1 = row.scores[productIds[0]] !== undefined ? row.scores[productIds[0]] : (row.scores[String(productIds[0])] !== undefined ? row.scores[String(productIds[0])] : Object.values(row.scores || {})[0]);
+                    const val2 = row.scores[productIds[1]] !== undefined ? row.scores[productIds[1]] : (row.scores[String(productIds[1])] !== undefined ? row.scores[String(productIds[1])] : Object.values(row.scores || {})[1]);
                     return (
                       <tr key={i} className="hover:bg-muted/20 transition-colors">
                         <td className="px-6 py-4 font-medium text-foreground">{row.aspect}</td>
@@ -378,7 +372,7 @@ export default function Compare() {
           {Object.entries(awards).map(([key, value]: [string, any]) => {
             const label = getAwardLabel(key);
             const Icon = label.icon;
-            const awardedProduct = value.productId === winner.id ? winner : winner; // default safe
+            const awardedProduct = comparedProducts.find(p => Number(p.id) === Number(value.productId)) || winner;
             return (
               <div key={key} className="bg-card border rounded-2xl p-5 flex flex-col justify-between hover:shadow-md transition-shadow">
                 <div className="space-y-3">

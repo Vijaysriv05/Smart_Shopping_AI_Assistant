@@ -58,7 +58,10 @@ function AiFeedbackBox({ productId }: { productId: number }) {
     setLoading(true);
     fetch("/api/ai/feedback", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "x-session-id": getSessionId()
+      },
       body: JSON.stringify({ productId, isHelpful, rating, comment })
     })
       .then(res => res.json())

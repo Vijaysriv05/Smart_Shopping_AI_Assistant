@@ -271,6 +271,7 @@ public class AiController {
 
                 return ResponseEntity.ok(Map.of(
                         "winner", winner,
+                        "products", products,
                         "analysis", parsed.getOrDefault("analysis", "Comparison completed."),
                         "comparisonTable", parsed.getOrDefault("comparisonTable", List.of()),
                         "recommendation", parsed.getOrDefault("recommendation", ""),
@@ -459,6 +460,7 @@ public class AiController {
 
         return Map.of(
                 "winner", winner,
+                "products", products,
                 "analysis", String.format("Comparing %s vs %s. %s leads on ratings.", products.get(0).getName(), products.get(1).getName(), winner.getName()),
                 "comparisonTable", table,
                 "recommendation", recommendation,

@@ -5,6 +5,9 @@ import jakarta.servlet.http.HttpServletRequest;
 public class SessionUtils {
     public static String getSessionId(HttpServletRequest request, String bodySessionId) {
         String header = request.getHeader("x-session-id");
+        if (header == null || header.trim().isEmpty()) {
+            header = request.getHeader("X-Session-Id");
+        }
         if (header != null && !header.trim().isEmpty()) {
             return header.trim();
         }

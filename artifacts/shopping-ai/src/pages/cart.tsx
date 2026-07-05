@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useGetCart, useRemoveFromCart, getGetCartQueryKey } from "@workspace/api-client-react";
+import { getSessionId } from "@/lib/session";
 import { PriceDisplay } from "@/components/price-display";
 import { Button } from "@/components/ui/button";
 import { PlaceholderImage } from "@/components/placeholder-image";
@@ -41,7 +42,7 @@ export default function Cart() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-Session-Id": localStorage.getItem("shopping-ai-session-id") || "",
+          "x-session-id": getSessionId(),
         },
       });
       if (!res.ok) {

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { useAiRecommend } from "@workspace/api-client-react";
+import { getSessionId } from "@/lib/session";
 import { ProductRecommendation } from "@workspace/api-client-react";
 import { ProductCard } from "@/components/product-card";
 import { Button } from "@/components/ui/button";
@@ -52,7 +53,11 @@ export default function Agent() {
 
   // Load active festival offers and goals list on mount
   useEffect(() => {
-    fetch("/api/ai/festivals/active")
+    fetch("/api/ai/festivals/active", {
+      headers: {
+        "x-session-id": getSessionId(),
+      }
+    })
       .then(res => res.json())
       .then(data => setFestivalData(data))
       .catch(err => console.error("Error fetching active festival:", err));
@@ -61,7 +66,11 @@ export default function Agent() {
   }, []);
 
   const loadGoals = () => {
-    fetch("/api/ai/goals")
+    fetch("/api/ai/goals", {
+      headers: {
+        "x-session-id": getSessionId(),
+      }
+    })
       .then(res => res.json())
       .then(data => setGoals(data))
       .catch(err => console.error("Error loading goals:", err));
@@ -120,7 +129,10 @@ export default function Agent() {
 
     fetch("/api/ai/goals", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "x-session-id": getSessionId()
+      },
       body: JSON.stringify({
         title: goalTitle,
         description: goalDetails,

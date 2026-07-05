@@ -3,7 +3,7 @@ import { ThemeToggle } from "./theme-toggle";
 import { Button } from "./ui/button";
 import { Bot, ShoppingCart, Heart, Search, Menu, UserCircle2, LogIn, LogOut, Bell } from "lucide-react";
 import { useGetCart, useGetWishlist } from "@workspace/api-client-react";
-import { getAuthUser, clearAuthSession, isAuthenticated } from "@/lib/session";
+import { getAuthUser, clearAuthSession, isAuthenticated, getSessionId } from "@/lib/session";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { useEffect } from "react";
@@ -19,14 +19,23 @@ function NotificationDropdown() {
   }, []);
 
   const loadAlerts = () => {
-    fetch("/api/ai/notifications")
+    fetch("/api/ai/notifications", {
+      headers: {
+        "x-session-id": getSessionId(),
+      }
+    })
       .then(res => res.json())
       .then(data => setAlerts(data))
       .catch(err => console.error("Error fetching notifications:", err));
   };
 
   const handleReadAll = () => {
-    fetch("/api/ai/notifications/read-all", { method: "POST" })
+    fetch("/api/ai/notifications/read-all", { 
+      method: "POST",
+      headers: {
+        "x-session-id": getSessionId(),
+      }
+    })
       .then(() => loadAlerts())
       .catch(err => console.error(err));
   };
