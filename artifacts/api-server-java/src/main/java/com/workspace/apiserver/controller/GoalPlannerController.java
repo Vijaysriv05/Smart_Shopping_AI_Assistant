@@ -156,28 +156,117 @@ public class GoalPlannerController {
     }
 
     private Map<String, Object> buildFallbackGoalData(String title, Double budget, List<Product> catalog) {
-        List<Product> cheapItems = catalog.stream()
-                .sorted(Comparator.comparingDouble(Product::getPrice))
-                .limit(3)
+        String cleanTitle = title.toLowerCase();
+        Set<String> targetCategories = new HashSet<>();
+
+        // Map keywords to categories
+        if (cleanTitle.matches(".*\\b(college|school|study|exam|class|learn|education|student|university)\\b.*")) {
+            targetCategories.add("Books");
+            targetCategories.add("Office Supplies");
+        }
+        if (cleanTitle.matches(".*\\b(work|office|job|desk|business|write|productivity)\\b.*")) {
+            targetCategories.add("Office Supplies");
+            targetCategories.add("Accessories");
+        }
+        if (cleanTitle.matches(".*\\b(baby|kid|child|infant|toy|parent|mom|dad|toddler)\\b.*")) {
+            targetCategories.add("Baby Products");
+        }
+        if (cleanTitle.matches(".*\\b(pet|dog|cat|animal|bird|fish|puppy|kitten)\\b.*")) {
+            targetCategories.add("Pet Supplies");
+        }
+        if (cleanTitle.matches(".*\\b(jewel|ring|necklace|bracelet|gold|silver|diamond|anniversary|wedding|earring)\\b.*")) {
+            targetCategories.add("Jewellery");
+            targetCategories.add("Accessories");
+        }
+        if (cleanTitle.matches(".*\\b(sport|game|outdoor|fitness|run|swim|travel|sunglasses|active|workout)\\b.*")) {
+            targetCategories.add("Accessories");
+            targetCategories.add("Pet Supplies");
+        }
+
+        // Try to filter products from target categories
+        List<Product> matchedProducts = catalog.stream()
+                .filter(p -> targetCategories.contains(p.getCategory()))
                 .collect(Collectors.toList());
 
+        // If no categories match, search name, description, brand, tags, category for keywords
+        if (matchedProducts.isEmpty()) {
+            String[] keywords = cleanTitle.split("\\s+");
+            matchedProducts = catalog.stream()
+                    .filter(p -> {
+                        for (String kw : keywords) {
+                            if (kw.length() < 3) continue;
+                            if ((p.getName() != null && p.getName().toLowerCase().contains(kw)) ||
+                                (p.getDescription() != null && p.getDescription().toLowerCase().contains(kw)) ||
+                                (p.getBrand() != null && p.getBrand().toLowerCase().contains(kw)) ||
+                                (p.getCategory() != null && p.getCategory().toLowerCase().contains(kw))) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    })
+                    .collect(Collectors.toList());
+        }
+
+        // If still empty, fall back to a diverse selection
+        if (matchedProducts.isEmpty()) {
+            Map<String, Product> diverseMap = new HashMap<>();
+            for (Product p : catalog) {
+                if (p.getCategory() != null) {
+                    diverseMap.putIfAbsent(p.getCategory(), p);
+                }
+            }
+            matchedProducts = new ArrayList<>(diverseMap.values());
+        }
+
+        // Sort by rating desc
+        matchedProducts.sort((p1, p2) -> Double.compare(
+                p2.getRating() != null ? p2.getRating() : 0.0,
+                p1.getRating() != null ? p1.getRating() : 0.0
+        ));
+
+        // Limit to 3 items
+        List<Product> selectedProducts = matchedProducts.stream().limit(3).collect(Collectors.toList());
+
+        // Build items list
         List<Map<String, Object>> items = new ArrayList<>();
-        int share = 100 / Math.max(cheapItems.size(), 1);
-        for (Product p : cheapItems) {
+        int[] allocations = selectedProducts.size() == 3 ? new int[]{50, 30, 20} :
+                            selectedProducts.size() == 2 ? new int[]{60, 40} : new int[]{100};
+        String[] priorities = new String[]{"Must Have", "Highly Recommended", "Nice to Have"};
+
+        for (int i = 0; i < selectedProducts.size(); i++) {
+            Product p = selectedProducts.get(i);
             items.add(Map.of(
                     "category", p.getCategory(),
                     "productId", p.getId(),
-                    "budgetAllocationPct", share,
-                    "priority", "Must Have"
+                    "budgetAllocationPct", allocations[i],
+                    "priority", priorities[i]
             ));
+        }
+
+        // Build alternative cheaper recommendations
+        List<Map<String, Object>> alternativeCheaper = new ArrayList<>();
+        for (Product p : selectedProducts) {
+            Optional<Product> cheaperOpt = catalog.stream()
+                    .filter(alt -> alt.getCategory() != null && alt.getCategory().equals(p.getCategory()))
+                    .filter(alt -> alt.getPrice() != null && p.getPrice() != null && alt.getPrice() < p.getPrice())
+                    .min(Comparator.comparingDouble(Product::getPrice));
+
+            if (cheaperOpt.isPresent()) {
+                Product cheaper = cheaperOpt.get();
+                alternativeCheaper.add(Map.of(
+                        "originalProductId", p.getId(),
+                        "alternativeProductId", cheaper.getId(),
+                        "savingsCents", (int) Math.round(p.getPrice() - cheaper.getPrice())
+                ));
+            }
         }
 
         return Map.of(
                 "description", String.format("A budget-friendly planner for your goal: %s.", title),
                 "items", items,
-                "priorityOrder", cheapItems.stream().map(Product::getCategory).collect(Collectors.toList()),
-                "alternativeCheaper", List.of(),
-                "estimatedTotalCents", cheapItems.stream().mapToDouble(Product::getPrice).sum()
+                "priorityOrder", selectedProducts.stream().map(Product::getCategory).collect(Collectors.toList()),
+                "alternativeCheaper", alternativeCheaper,
+                "estimatedTotalCents", selectedProducts.stream().mapToDouble(p -> p.getPrice() != null ? p.getPrice() : 0.0).sum()
         );
     }
 }
