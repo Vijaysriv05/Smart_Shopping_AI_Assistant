@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -27,6 +28,24 @@ public class ProductController {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final JdbcTemplate jdbcTemplate;
+
+    @GetMapping("/fix-images")
+    public ResponseEntity<?> fixImages() {
+        try {
+            int rowsAffected = jdbcTemplate.update("UPDATE products SET image_url = REPLACE(image_url, 'photo-photo-', 'photo-')");
+            log.info("Successfully fixed product images in database. Rows affected: {}", rowsAffected);
+            return ResponseEntity.ok(Map.of(
+                "success", true,
+                "message", "Successfully updated product image URLs in the database!",
+                "rowsAffected", rowsAffected
+            ));
+        } catch (Exception e) {
+            log.error("Failed to update product images: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "error", e.getMessage()));
+        }
+    }
 
     @GetMapping
     public ResponseEntity<List<Product>> listProducts(
