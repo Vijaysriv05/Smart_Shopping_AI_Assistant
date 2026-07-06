@@ -1,5 +1,5 @@
 # Stage 1: Build the React frontend
-FROM node:22-alpine AS frontend-builder
+FROM node:22-slim AS frontend-builder
 RUN npm install -g pnpm
 WORKDIR /app
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
