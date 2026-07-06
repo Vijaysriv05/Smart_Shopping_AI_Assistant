@@ -4,8 +4,8 @@ RUN npm install -g pnpm
 WORKDIR /app
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY artifacts/shopping-ai/package.json ./artifacts/shopping-ai/
-COPY lib/db/package.json ./lib/db/
-COPY scripts/package.json ./scripts/
+COPY artifacts/mockup-sandbox/package.json ./artifacts/mockup-sandbox/
+COPY lib/api-client-react/package.json ./lib/api-client-react/
 RUN pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm --filter @workspace/shopping-ai run build
