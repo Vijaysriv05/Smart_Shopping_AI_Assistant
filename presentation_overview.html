@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Goval AI Presentation Overview</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      color: #1e293b;
+      line-height: 1.6;
+      margin: 0;
+      padding: 2cm;
+      background-color: #ffffff;
+      font-size: 14px;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #0f172a;
+      border-bottom: 2px solid #6366f1;
+      padding-bottom: 12px;
+      margin-top: 0;
+      margin-bottom: 24px;
+    }
+    h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #4f46e5;
+      margin-top: 28px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 6px;
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #0f172a;
+      margin-top: 20px;
+      margin-bottom: 8px;
+      page-break-after: avoid;
+    }
+    p {
+      margin-top: 0;
+      margin-bottom: 12px;
+    }
+    ul {
+      margin-top: 0;
+      margin-bottom: 16px;
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 6px;
+    }
+    code {
+      font-family: monospace;
+      background-color: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    hr {
+      border: 0;
+      border-top: 1px solid #e2e8f0;
+      margin: 24px 0;
+    }
+    strong {
+      color: #0f172a;
+      font-weight: 600;
+    }
+    @page {
+      size: A4;
+      margin: 1.5cm;
+    }
+  </style>
+</head>
+<body>
+  <h1>Project Presentation Guide: Goval AI - Smart Autonomous Shopping AI Agent</h1>
+
+<p>This guide outlines the features, technology stack, AI details, prompt engineering techniques, and key unique selling points (USPs) of <strong>Goval AI</strong> to help you deliver an outstanding project presentation.</p>
+
+<hr />
+<h2>1. Core Technology Stack</h2>
+Your project is built using a modern, scalable, decoupled full-stack architecture:
+
+<ul style="margin-left: 0px;"><li><strong>Frontend</strong>: </li>
+<li><strong>React (Vite + TypeScript)</strong>: Provides a fast, type-safe, single-page application framework.</li>
+<li><strong>Tailwind CSS</strong>: A utility-first CSS framework for custom responsive styling.</li>
+<li><strong>Framer Motion & Lucide React</strong>: Delivers smooth, premium micro-animations (e.g., page transitions, interactive hover effects) and modern iconography.</li>
+<li><strong>React Query (TanStack)</strong>: Manages state caching, backend synchronization, and query loading states.</li>
+<li><strong>Backend</strong>: </li>
+<li><strong>Java Spring Boot</strong>: A production-ready REST API gateway built using Spring Web, Spring Security, and Maven dependency management.</li>
+<li><strong>Spring Data JPA (Hibernate)</strong>: Simplifies database interactions, query generation, and object-relational mapping (ORM).</li>
+<li><strong>Database</strong>: </li>
+<li><strong>MySQL</strong>: A robust relational database storing product catalogs, user session tracking, shopping carts, order histories, wishlists, and spending analytics records.</li>
+</ul>
+<hr />
+<h2>2. Artificial Intelligence & LLM Details</h2>
+
+<ul style="margin-left: 0px;"><li><strong>LLM Model Used</strong>: </li>
+<li><strong>Google Gemini (<code>gemini-2.0-flash</code> and <code>gemini-1.5-flash</code>)</strong>: Accessed via the Google AI Studio developer endpoint. The backend implements a multi-model failover mechanism: if <code>gemini-2.0-flash</code> fails or hits rate limits, it automatically falls back to <code>gemini-1.5-flash</code>.</li>
+<li><strong>Type of AI Implemented</strong>:</li>
+<li><strong>Orchestrated Agentic AI</strong>: The system functions as an autonomous shopping helper. It doesn't just chat—it tracks session context, constructs personalized profiles, calculates budget splits, compares catalog item specs, and computes potential savings.</li>
+<li><strong>Deterministic Hybrid Heuristics</strong>: To ensure 100% service availability, the backend is built with a dual-layer AI architecture. If Gemini is rate-limited (HTTP 429), a local keyword-matching algorithm dynamically executes (tokenizing the goal title, mapping categories, sorting by rating, and generating cheaper alternatives) so the user never sees a broken interface.</li>
+</ul>
+<hr />
+<h2>3. Prompt Engineering Techniques Used</h2>
+The project utilizes advanced prompt engineering to achieve reliable backend integration:
+
+<p>1.  <strong>System Persona Prompting</strong>: 
+<ul style="margin-left: 40px;"><li>Instructs Gemini to assume specific roles (e.g., *"You are an expert AI Shopping Goal Planner"*, *"You are an expert product analyst"*).</li></ul>
+2.  <strong>Structured JSON Mode</strong>:
+<ul style="margin-left: 40px;"><li>Prompts explicitly specify a strict JSON schema and demand a raw JSON string output (using <code>responseMimeType: "application/json"</code>). This eliminates natural language filler text, allowing the backend to deserialize the model's response directly into Java objects using Jackson ObjectMapper.</li></ul>
+3.  <strong>In-Context Learning (RAG-style Catalog Injection)</strong>:
+<ul style="margin-left: 40px;"><li>Instead of letting Gemini recommend non-existent items, the backend dynamically queries the MySQL database and injects the live product catalog (IDs, names, brands, categories, prices, ratings) directly into the prompt context. This forces Gemini to align its recommendations with real catalog items.</li>
+</ul>
+<hr />
+<h2>4. Key Project Features</h2>
+<ul style="margin-left: 0px;"><li><strong>Conversational Shopping Assistant</strong>: Users can ask natural language queries to receive product suggestions, budget evaluations, and reasoning explanations.</li>
+<li><strong>Smart Shopping Goal Planner</strong>: Automatically takes a user's goal (e.g., "Joining College") and budget, then constructs a categorized budget allocation plan (Must Have, Highly Recommended, Nice to Have).</li>
+<li><strong>Side-by-Side Comparison Engine</strong>: Compares multiple items detailing specs, ratings, and displays automated <strong>Gemini Choice Awards</strong> (e.g., Value Pick, Premium Pick, Top Spec).</li>
+<li><strong>Interactive Personal Dashboard</strong>: Displays monthly, weekly, and yearly AI Spending Reports, budget utilization trackers, and coupon savings history.</li>
+<li><strong>Real-time Cart & Order Checkout</strong>: Saves and confirms orders, which dynamically update the dashboard statistics.</li>
+</ul>
+<hr />
+<h2>5. Project Uniqueness & Competitive Advantage</h2>
+<ul style="margin-left: 0px;"><li><strong>Dual-Layer Fault Tolerant Architecture</strong>: Unlike other AI apps that crash when API keys hit free-tier rate limits, Goval AI's backend detects the failure and dynamically generates fallback category allocations and cheaper recommendations using local database heuristics.</li>
+<li><strong>Value-Focused Alternative Suggestion</strong>: The planner actively analyzes items and suggests cheaper database alternatives in the same category, showing the exact savings (e.g., *“Replace Product A with Product B to save $15.00”*).</li>
+<li><strong>Granular Budget Blueprints</strong>: Rather than just displaying list recommendations, it performs actual financial blueprinting, splitting the budget into percentages mapped to priorities.</li>
+<li><strong>Zero-Login Personalization</strong>: Utilizes lightweight, dynamic session-based tracking (<code>x-session-id</code>) so users receive a tailored, high-fidelity experience without onboarding friction.</li>
+</ul></p>
+</body>
+</html>
+  
