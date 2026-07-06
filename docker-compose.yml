@@ -14,7 +14,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pVaSo@497$"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pVaSo@497$" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -35,7 +35,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/ai_shopping_assistant?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=VaSo@497$
-      - GEMINI_API_KEY=${GEMINI_API_KEY:-AQ.Ab8RN6IBmmu7XDm2NfKnBB-0vkIqyfJvTE1VtnI4uP_mziEVSw}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:}
       - SERVER_PORT=5000
 
 volumes:
