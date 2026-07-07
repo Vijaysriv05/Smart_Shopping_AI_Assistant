@@ -17,6 +17,34 @@ if (Test-Path $envPath) {
             }
         }
     }
+    
+    # Parse DATABASE_URL if present to set SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME, and SPRING_DATASOURCE_PASSWORD
+    $dbUrl = [System.Environment]::GetEnvironmentVariable("DATABASE_URL", "Process")
+    if ($dbUrl -and $dbUrl.StartsWith("mysql://")) {
+        if ($dbUrl -match "mysql://([^:]+):([^@]+)@([^:/]+)(?::(\d+))?/(.+)") {
+            $user = $Matches[1]
+            $pass = $Matches[2]
+            $host = $Matches[3]
+            $port = $Matches[4]
+            $dbName = $Matches[5]
+            
+            # URL decode user and password if they contain encoded characters (like %40 or %24)
+            $user = [System.Uri]::UnescapeDataString($user)
+            $pass = [System.Uri]::UnescapeDataString($pass)
+            
+            if (-not $port) { $port = "3306" }
+            
+            $jdbcUrl = "jdbc:mysql://$host:$port/$dbName?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false"
+            
+            [System.Environment]::SetEnvironmentVariable("SPRING_DATASOURCE_URL", $jdbcUrl, "Process")
+            [System.Environment]::SetEnvironmentVariable("SPRING_DATASOURCE_USERNAME", $user, "Process")
+            [System.Environment]::SetEnvironmentVariable("SPRING_DATASOURCE_PASSWORD", $pass, "Process")
+            
+            Write-Host "Auto-configured Spring Datasource from DATABASE_URL:"
+            Write-Host "  URL: jdbc:mysql://$host:$port/$dbName"
+            Write-Host "  Username: $user"
+        }
+    }
 } else {
     Write-Host "No .env file found at $envPath"
 }
