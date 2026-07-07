@@ -73,6 +73,16 @@ public class ProductController {
                 filterSearch = parsedNL.getSearch();
             }
 
+            if (filterCategory != null && !filterCategory.trim().isEmpty()) {
+                final String catParam = filterCategory;
+                Optional<Category> dbCat = categoryRepository.findAll().stream()
+                        .filter(c -> catParam.equalsIgnoreCase(c.getSlug()) || catParam.equalsIgnoreCase(c.getName()))
+                        .findFirst();
+                if (dbCat.isPresent()) {
+                    filterCategory = dbCat.get().getName();
+                }
+            }
+
             final String finalCat = filterCategory;
             final String finalBrand = filterBrand;
             final Double finalMinPrice = filterMinPrice;
